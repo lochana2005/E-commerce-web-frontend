@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Star, ArrowRight, Sparkles } from 'lucide-react';
-
+import TrendingProduct from '../components/TrendingProduct';
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -9,11 +9,9 @@ const Home = () => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Mouse eka wadina thana anuwa rotate wena pramanaya calculate karanawa
-  const rotateX = useTransform(y, [-100, 100], [30, -30]);
-  const rotateY = useTransform(x, [-100, 100], [-30, 30]);
+  const rotateX = useTransform(y, [-100, 100], [25, -25]);
+  const rotateY = useTransform(x, [-100, 100], [-25, 25]);
 
-  // Smooth animation (spring physics)
   const springConfig = { damping: 25, stiffness: 150 };
   const rotateXSpring = useSpring(rotateX, springConfig);
   const rotateYSpring = useSpring(rotateY, springConfig);
@@ -26,7 +24,7 @@ const Home = () => {
     const mouseY = e.clientY - rect.top;
     const xPct = mouseX / width - 0.5;
     const yPct = mouseY / height - 0.5;
-    x.set(xPct * 200); // Sensitivity controls
+    x.set(xPct * 200);
     y.set(yPct * 200);
   };
 
@@ -35,14 +33,13 @@ const Home = () => {
     y.set(0);
   };
 
-  // --- SLIDER DATA ---
   const slides = [
     {
       id: 1,
       title: "New Era of",
       highlight: "Luxury.",
       desc: "Experience the perfect blend of comfort and style with our signature collection.",
-      image: "src/assets/img/home.png", // Local image for better performance
+      image: "src/assets/img/home.png",
       color: "from-blue-100 to-indigo-50",
       accent: "text-blue-900"
     },
@@ -66,7 +63,6 @@ const Home = () => {
     }
   ];
 
-  // Auto Slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -76,176 +72,217 @@ const Home = () => {
 
   return (
     <div className="bg-white min-h-screen font-sans overflow-x-hidden">
-      
-      {/* --- HERO SECTION (PREMIUM 3D LAYOUT) --- */}
+
+      {/* --- HERO SECTION --- */}
       <div className={`relative w-full h-screen overflow-hidden bg-gradient-to-br ${slides[currentSlide].color} transition-colors duration-1000`}>
-        
-        {/* Abstract Background Shapes (Passe thiyena loku circles) */}
+
+        {/* Background Decorative Shapes */}
         <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-white opacity-40 rounded-full blur-3xl"></div>
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-white opacity-60 rounded-full blur-3xl"></div>
 
-        <div className="max-w-7xl mx-auto px-6 h-full flex flex-col md:flex-row items-center justify-center relative z-10">
-          
-          {/* 1. LEFT SIDE: BIG TEXT */}
-          <div className="flex-1 space-y-8 pt-20 md:pt-0 text-center md:text-left">
+        <div className="max-w-7xl mx-auto px-6 h-full flex flex-col md:flex-row items-center justify-center relative z-10 pt-16">
+
+          {/* 1. LEFT SIDE: TEXT CONTENT (Layered Above Model) */}
+          <div className="flex-1 space-y-6 md:space-y-8 text-center md:text-left z-20">
             <motion.div
-              key={currentSlide} // Text maru weddi animate wenna
-              initial={{ opacity: 0, y: 40 }}
+              key={currentSlide}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
               transition={{ duration: 0.8 }}
             >
               <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
-                <span className="px-3 py-1 bg-white/80 backdrop-blur rounded-full text-xs font-bold uppercase tracking-widest shadow-sm">New Collection 2026</span>
-                <Sparkles size={16} className="text-yellow-600" />
+                <span className="px-3 py-1 bg-white/80 backdrop-blur rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">Collection 2026</span>
+                <Sparkles size={14} className="text-yellow-600" />
               </div>
-              
-              <h1 className={`text-6xl md:text-8xl font-serif font-medium leading-[0.9] ${slides[currentSlide].accent}`}>
+
+              <h1 className={`text-5xl md:text-8xl font-serif font-medium leading-[1] ${slides[currentSlide].accent}`}>
                 {slides[currentSlide].title} <br />
                 <span className="italic font-light opacity-80">{slides[currentSlide].highlight}</span>
               </h1>
-              
-              <p className="text-gray-600 text-lg max-w-md mt-6 mx-auto md:mx-0 leading-relaxed">
+
+              <p className="text-slate-600 text-sm md:text-lg max-w-md mt-4 md:mt-6 mx-auto md:mx-0 leading-relaxed font-medium">
                 {slides[currentSlide].desc}
               </p>
 
-              <div className="mt-8 flex gap-4 justify-center md:justify-start">
-                <button className="bg-black text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:scale-105 transition-transform flex items-center gap-2">
+              {/* Action Buttons - Fixed Visibility */}
+              <div className="mt-8 md:mt-10 flex gap-3 md:gap-4 justify-center md:justify-start relative z-30">
+                <button className="bg-black text-white px-7 md:px-10 py-3 md:py-4 rounded-full font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 text-sm md:text-base">
                   Shop Now <ArrowRight size={18} />
                 </button>
-                <button className="px-8 py-4 rounded-full font-bold border border-black/10 hover:bg-white transition-colors">
-                  View Lookbook
-                </button>
+                {/* <button className="px-7 md:px-10 py-3 md:py-4 rounded-full font-bold border border-black/10 bg-white/40 backdrop-blur-sm hover:bg-white transition-all text-sm md:text-base text-black">
+                  Lookbook
+                </button> */}
               </div>
             </motion.div>
           </div>
 
-          {/* 2. RIGHT SIDE: 3D INTERACTIVE MODEL */}
-          <div 
-            className="flex-1 h-full flex items-center justify-center perspective-1000 relative"
+          {/* 2. RIGHT SIDE: 3D INTERACTIVE MODEL (Layered Below Buttons) */}
+          <div
+            className="flex-1 h-full flex items-end md:items-center justify-center perspective-1000 relative z-10 mt-[-40px] md:mt-0"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-             {/* Background Blob behind model */}
-             <motion.div 
-               initial={{ scale: 0.8, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               className="absolute w-[400px] h-[400px] md:w-[500px] md:h-[500px] bg-white rounded-full shadow-2xl z-0"
-               style={{
-                 rotateX: rotateXSpring,
-                 rotateY: rotateYSpring,
-               }}
-             />
+            {/* Background Blob */}
+            <motion.div
+              style={{ rotateX: rotateXSpring, rotateY: rotateYSpring }}
+              className="absolute w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-white rounded-full shadow-2xl z-0"
+            />
 
-             {/* The Model Image (Floating 3D) */}
-             <motion.div
-                style={{
-                  rotateX: rotateXSpring,
-                  rotateY: rotateYSpring,
-                  z: 100 // Lifts the image off the background
-                }}
-                className="relative z-10 cursor-pointer"
-             >
-                <motion.img 
-                   key={slides[currentSlide].image}
-                   src={slides[currentSlide].image} 
-                   alt="Model"
-                   initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                   animate={{ opacity: 1, scale: 1.1, y: 0 }}
-                   transition={{ duration: 0.8, ease: "easeOut" }}
-                   className="h-[50vh] md:h-[80vh] w-auto object-contain drop-shadow-2xl"
-                   style={{ filter: "drop-shadow(0px 20px 40px rgba(0,0,0,0.25))" }}
-                />
-             </motion.div>
+            {/* The Model Image */}
+            <motion.div
+              style={{ rotateX: rotateXSpring, rotateY: rotateYSpring, z: 50 }}
+              className="relative z-10"
+            >
+              <motion.img
+                key={slides[currentSlide].image}
+                src={slides[currentSlide].image}
+                alt="Model"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                className="h-[45vh] md:h-[80vh] w-auto object-contain drop-shadow-2xl"
+              />
+            </motion.div>
           </div>
-
         </div>
 
-        {/* Bottom Progress Bar */}
-        <div className="absolute bottom-0 left-0 h-1 bg-gray-200 w-full">
-            <motion.div 
-              key={currentSlide}
-              initial={{ width: "0%" }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 5, ease: "linear" }}
-              className="h-full bg-black"
-            />
+        {/* Progress Bar */}
+        <div className="absolute bottom-0 left-0 h-1 bg-black/5 w-full z-40">
+          <motion.div
+            key={currentSlide}
+            initial={{ width: "0%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 5, ease: "linear" }}
+            className="h-full bg-black"
+          />
         </div>
       </div>
 
-      {/* --- ANITH SECTIONS (Top Selling etc.) --- */}
-      {/* Mewa parana ewa ma thiyanna */}
+      {/* Other Sections */}
       <TopSellingSection />
       <BestProductsSection />
+      <TrendingProduct />
+      <ReviewsSection />
+
 
     </div>
   );
 };
 
-// --- HELPER COMPONENTS (Parana widiyatama thiyanna) ---
-const TopSellingSection = () => {
-    const products = [
-        { id: 1, name: "Casual Wear", color: "bg-gray-100", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" },
-        { id: 2, name: "Printed Shirt", color: "bg-gray-100", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1000&auto=format&fit=crop" },
-        { id: 3, name: "Women Shirt", color: "bg-gray-100", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1000&auto=format&fit=crop" },
-        { id: 4, name: "Fashion Tee", color: "bg-gray-100", image: "https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop" },
-    ];
-    return (
-        <section className="py-24 px-6 max-w-7xl mx-auto">
-            <div className="text-center mb-16 space-y-3">
-                <p className="text-gray-500 font-bold uppercase tracking-widest text-sm">Top Selling</p>
-                <h2 className="text-4xl font-serif font-medium text-black">Weekly Picks</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                {products.map((item, index) => (
-                    <motion.div key={item.id} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }} viewport={{ once: true }} className="group text-center">
-                        <div className={`${item.color} rounded-2xl p-6 mb-4 transition-all duration-300 hover:shadow-lg h-[300px] flex items-center justify-center relative overflow-hidden`}>
-                            <img src={item.image} alt={item.name} className="h-full w-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500 mix-blend-multiply" />
-                        </div>
-                        <h3 className="font-bold text-xl text-gray-900">{item.name}</h3>
-                        <div className="flex justify-center items-center space-x-1 text-black mt-2">
-                             {[...Array(5)].map((_,i) => <Star key={i} size={14} fill="currentColor" />)}
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-        </section>
-    );
-};
+// --- Helper Components ---
+const TopSellingSection = () => (
+  <section className="py-24 px-6 max-w-7xl mx-auto">
+    <div className="text-center mb-16 space-y-3">
+      <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px]">Top Selling</p>
+      <h2 className="text-4xl font-serif font-medium text-slate-900 italic underline underline-offset-8 decoration-slate-100">Weekly Picks</h2>
+    </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="group">
+          <div className="aspect-[3/4] bg-slate-50 rounded-[2rem] mb-4 overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500">
+            <div className="w-full h-full flex items-center justify-center text-slate-200 font-serif italic">Product {i}</div>
+          </div>
+          <h3 className="font-bold text-slate-900">Premium Item</h3>
+          <p className="text-slate-400 text-sm">$99.00</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
 
-const BestProductsSection = () => {
-    const products = [
-        { id: 1, name: "Casual Wear", desc: "Premium cotton fabric.", image: "https://images.unsplash.com/photo-1598532163257-ae3cde09909c?q=80&w=1740&auto=format&fit=crop" },
-        { id: 2, name: "Printed Shirt", desc: "Modern abstract prints.", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1740&auto=format&fit=crop" },
-        { id: 3, name: "Women Shirt", desc: "Elegant office wear.", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=1888&auto=format&fit=crop" },
-    ];
-    return (
-        <section className="py-20 px-6 bg-gray-50">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-left mb-12">
-                    <p className="text-gray-500 text-sm font-bold uppercase">Trending</p>
-                    <h2 className="text-4xl font-serif font-medium text-black">Best Products</h2>
+const BestProductsSection = () => (
+  <section className="py-24 bg-slate-50 px-6">
+    <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+      <div className="order-2 md:order-1">
+        <div className="aspect-square bg-white rounded-[3rem] shadow-2xl overflow-hidden p-10">
+          <div className="w-full h-full bg-slate-50 rounded-[2rem] flex items-center justify-center font-serif text-slate-200">Featured Image</div>
+        </div>
+      </div>
+      <div className="order-1 md:order-2 space-y-8">
+        <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px]">Editor's Choice</p>
+        <h2 className="text-5xl font-serif leading-tight text-slate-900">Classic Elegance <br /> For Every Season.</h2>
+        <p className="text-slate-500 leading-relaxed font-medium">Our best-selling collection is designed for comfort without compromising on style. Premium fabrics meets modern tailoring.</p>
+        <button className="bg-black text-white px-10 py-4 rounded-full font-bold shadow-xl">Explore Collection</button>
+      </div>
+    </div>
+  </section>
+);
+
+<TrendingProduct />
+
+const ReviewsSection = () => {
+  const reviews = [
+    { id: 1, name: "Anjali Perera", role: "Verified Buyer", comment: "The quality of the fabric is amazing! I bought a summer dress and it fits perfectly.", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop" },
+    { id: 2, name: "Kasun Jayawardena", role: "Verified Buyer", comment: "Best customer service I've experienced. Delivery was fast and quality is top notch.", rating: 5, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&auto=format&fit=crop" },
+    { id: 3, name: "Dilini Silva", role: "Verified Buyer", comment: "Superb elegant designs. LUXE ATTIRE is now my go-to place for office wear.", rating: 5, image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&auto=format&fit=crop" },
+    { id: 4, name: "Nimesh Dias", role: "Verified Buyer", comment: "The 3D experience on this site is amazing. Product quality is also 10/10.", rating: 5, image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&auto=format&fit=crop" },
+    { id: 5, name: "Sithumi Ranasinghe", role: "Verified Buyer", comment: "I love the new collection. Very stylish and the material feels premium.", rating: 5, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=150&h=150&auto=format&fit=crop" }
+  ];
+
+  // Infinite scroll effect eka ganna reviews list eka double karanawa
+  const duplicatedReviews = [...reviews, ...reviews];
+
+  return (
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 text-center mb-16">
+        <p className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-3">Testimonials</p>
+        <h2 className="text-4xl font-serif mb-4 text-black">What Our Customers Say</h2>
+        <div className="w-20 h-1 bg-black mx-auto"></div>
+      </div>
+
+      {/* --- AUTO-SCROLLING CONTAINER --- */}
+      <div className="relative flex overflow-hidden">
+        <motion.div
+          className="flex gap-8"
+          animate={{
+            x: ["0%", "-50%"] // Mada wenakam scroll unama aye mulata paninawa (Infinite look)
+          }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 25, // Scroll wena speed eka (Wadi kaloth slow wenawa)
+              ease: "linear",
+            },
+          }}
+          style={{ perspective: "1200px" }}
+        >
+          {duplicatedReviews.map((review, index) => (
+            <motion.div
+              key={`${review.id}-${index}`}
+              whileHover={{
+                rotateY: 10,
+                z: 50,
+                scale: 1.05,
+                transition: { duration: 0.3 }
+              }}
+              className="min-w-[350px] md:min-w-[400px] p-10 rounded-3xl bg-white border border-gray-100 shadow-xl shadow-gray-200/40 relative group cursor-pointer"
+            >
+              <div className="flex text-yellow-500 mb-6">
+                {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
+              </div>
+
+              <p className="text-gray-700 text-lg italic mb-10 leading-relaxed font-light">
+                "{review.comment}"
+              </p>
+
+              <div className="flex items-center gap-4 border-t border-gray-50 pt-6">
+                <img
+                  src={review.image}
+                  alt={review.name}
+                  className="w-14 h-14 rounded-full object-cover border-4 border-white shadow-md"
+                />
+                <div className="text-left">
+                  <h4 className="font-bold text-gray-900">{review.name}</h4>
+                  <p className="text-xs text-gray-400 uppercase tracking-widest">{review.role}</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {products.map((item, index) => (
-                        <motion.div key={item.id} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} whileHover={{ y: -10 }} className="bg-white rounded-xl shadow-lg p-6 group hover:bg-black hover:text-white transition-all duration-300 cursor-pointer relative">
-                            <div className="h-48 w-full mb-4 overflow-hidden rounded-lg">
-                                <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                            </div>
-                            <div className="space-y-2 text-center">
-                                <div className="flex justify-center space-x-1 text-yellow-400">
-                                    {[...Array(5)].map((_,i) => <Star key={i} size={16} fill="currentColor" />)}
-                                </div>
-                                <h3 className="text-xl font-bold">{item.name}</h3>
-                                <p className="text-sm text-gray-500 group-hover:text-gray-300 line-clamp-2">{item.desc}</p>
-                                <button className="mt-4 bg-black text-white px-6 py-2 rounded-full text-sm font-bold group-hover:bg-white group-hover:text-black transition-colors">Order Now</button>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
 };
 
 export default Home;
