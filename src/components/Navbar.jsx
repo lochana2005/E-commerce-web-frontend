@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, Menu, X, User, LogOut, Settings, Heart } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, User, LogOut, Heart, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuthContext } from '../context/AuthContext'; // AuthContext එක නිවැරදිව Import කරගන්න
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,12 +10,12 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   
-  // Simulation of Auth State (Meka aththama auth ekaka context eken enne)
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  // AuthContext හරහා ඇත්තම User දත්ත ලබාගැනීම
+  const { user, logout } = useContext(AuthContext);
   
   const location = useLocation();
 
-  // Scroll effect to change navbar background
+  // Scroll effect - Navbar එක පල්ලෙහාට යද්දී background එක වෙනස් වීමට
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -23,7 +24,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus when route changes
+  // පේජ් එක මාරු වෙද්දී විවෘත වී ඇති menus වසා දැමීම
   useEffect(() => {
     setIsOpen(false);
     setIsSearchOpen(false);
@@ -83,7 +84,7 @@ const Navbar = () => {
             </Link>
 
             {/* --- AUTH LOGIC START --- */}
-            {!isLoggedIn ? (
+            {!user ? (
               <Link 
                 to="/login" 
                 className="hidden md:block bg-black text-white px-8 py-2.5 rounded-full text-sm font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
@@ -94,13 +95,14 @@ const Navbar = () => {
               <div className="relative">
                 <button 
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="w-10 h-10 rounded-full border-2 border-slate-100 overflow-hidden hover:border-black transition-all shadow-sm"
+                  className="w-10 h-10 rounded-full border-2 border-slate-100 overflow-hidden hover:border-black transition-all shadow-sm flex items-center justify-center bg-slate-50"
                 >
-                  <img 
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop" 
-                    alt="User" 
-                    className="w-full h-full object-cover"
-                  />
+                  {/* Google පින්තූරය ඇත්නම් එය පෙන්වයි, නැත්නම් default icon එක */}
+                  {user.picture ? (
+                    <img src={user.picture} alt="User" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={20} className="text-slate-400" />
+                  )}
                 </button>
 
                 {/* Profile Dropdown Menu */}
@@ -110,11 +112,15 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-4 w-56 bg-white rounded-2xl shadow-2xl border border-slate-50 p-2 overflow-hidden"
+                      className="absolute right-0 mt-4 w-64 bg-white rounded-2xl shadow-2xl border border-slate-50 p-2 overflow-hidden"
                     >
                       <div className="px-4 py-3 border-b border-slate-50 mb-1">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Welcome</p>
-                        <p className="text-sm font-bold text-slate-900 truncate">S.R. Iyuri Nimesha</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Your Account</p>
+                        {/* යූසර්ගේ නම dynamic ලෙස පෙන්වීම */}
+                        <p className="text-sm font-bold text-slate-900 truncate">
+                          {user.name || "S.R. Iyuri Nimesha"}
+                        </p>
+                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
                       </div>
                       
                       <DropdownItem to="/profile" icon={<User size={16} />} label="My Profile" />
@@ -123,7 +129,7 @@ const Navbar = () => {
                       
                       <div className="border-t border-slate-50 mt-2 pt-2">
                         <button 
-                          onClick={() => setIsLoggedIn(false)}
+                          onClick={logout} 
                           className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all"
                         >
                           <LogOut size={16} /> Logout
@@ -161,11 +167,6 @@ const Navbar = () => {
                   placeholder="Search for premium attire..."
                   className="w-full text-3xl font-serif italic border-b-2 border-slate-100 py-4 outline-none focus:border-black transition-all"
                 />
-                <div className="mt-4 flex gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  <span>Trending:</span>
-                  <button className="hover:text-black">Linen Shirts</button>
-                  <button className="hover:text-black">Summer Dresses</button>
-                </div>
               </div>
             </motion.div>
           )}
@@ -193,8 +194,8 @@ const Navbar = () => {
                 {navLinks.map((link) => (
                   <Link key={link.name} to={link.path} className="text-3xl font-serif font-medium">{link.name}</Link>
                 ))}
-                {!isLoggedIn && (
-                  <Link to="/login" className="text-3xl font-serif font-medium text-blue-600">Login</Link>
+                {!user && (
+                  <Link to="/login" className="text-3xl font-serif font-medium text-black underline">Login</Link>
                 )}
               </div>
             </motion.div>
@@ -205,7 +206,7 @@ const Navbar = () => {
   );
 };
 
-// Helper for Dropdown Items
+// Dropdown Items සඳහා Helper Component
 const DropdownItem = ({ to, icon, label }) => (
   <Link to={to} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-black rounded-xl transition-all">
     {icon} {label}

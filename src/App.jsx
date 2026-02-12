@@ -15,6 +15,9 @@ import Checkout from './pages/Checkout';
 import Contact from './pages/contact';
 import About from './pages/About';
 import Auth from './pages/Auth';
+// App.jsx
+import UserProfile from './pages/Userprofile'; // ෆයිල් එක තියෙන තැන (Path එක) නිවැරදිද බලන්න
+
 
 import './App.css';
 
@@ -38,6 +41,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Routes>
         </main>
 
