@@ -87,7 +87,7 @@ const UserProfile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#fcfcfc] pt-28 pb-16 px-4 md:px-8 font-sans">
+        <div className="min-h-screen bg-[#fcfcfc] pt-10 pb-16 px-4 md:px-8 font-sans">
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 {/* --- වම්පස Sidebar එක --- */}

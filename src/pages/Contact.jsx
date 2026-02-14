@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <div className="bg-white min-h-screen pt-20 pb-12">
+    <div className="bg-white min-h-screen pt-10 pb-12">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

@@ -182,8 +182,11 @@ const TopSellingSection = () => (
           <div className="aspect-[3/4] bg-slate-50 rounded-[2rem] mb-4 overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-500">
             <div className="w-full h-full flex items-center justify-center text-slate-200 font-serif italic">Product {i}</div>
           </div>
-          <h3 className="font-bold text-slate-900">Premium Item</h3>
-          <p className="text-slate-400 text-sm">$99.00</p>
+          <center>
+            <h3 className="font-bold text-slate-900">Premium Item</h3>
+          </center>
+
+          <p className="text-slate-400 text-sm"></p>
         </div>
       ))}
     </div>

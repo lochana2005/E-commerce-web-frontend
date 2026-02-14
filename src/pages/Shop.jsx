@@ -47,8 +47,8 @@ const Shop = () => {
         {/* --- PAGE HEADER --- */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h1 className="text-5xl font-serif font-medium mb-2 text-slate-900">Collections</h1>
-
+            <h1 className="text-3xl font-serif font-medium mb-2 text-slate-900">Collections</h1>
+<hr />
           </motion.div>
           
           <button 
@@ -76,7 +76,9 @@ const Shop = () => {
                 />
                 <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               </div>
+              <hr />
             </div>
+            
 
             <div className="space-y-4">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900">Categories</h3>
